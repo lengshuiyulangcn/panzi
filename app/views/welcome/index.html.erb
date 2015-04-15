@@ -1,0 +1,39 @@
+<!--<div id="map-canvas">
+</div>
+-->
+<% content_for :header do -%>
+	<%= stylesheet_link_tag 'box' %>
+<% end -%>
+<div class="row">
+	<%@products.each do |product|%>
+		<div class="panel panel-success col-md-4 col-md-offset-1">
+			<center>
+				<span style="font-size: 14pt;"><%=link_to product.name, product_path(product.id)%></span>
+			</center>
+			<div class="pull-right">
+				<%if current_user and product.followers.include? current_user%>
+					<%=link_to "-取消关注", product_follow_path(product.id)%>
+				<%else%>
+					<%=link_to "+关注", product_follow_path(product.id)%>
+				<%end%>
+			</div>
+			<div class="panel-body">
+				<span style="font-size :12pt;"><%=product.description%></span>
+				<div class="thumb">
+					<%product.product_images.each do |image|%>
+						<%=link_to image_tag(image.image.thumb), image.image.url, :"data-lightbox"=>image.id%>
+					<%end%>
+					<h6>标签:</h6>
+					<%product.tags.each do |tag|%>
+						<%=tag.title%>
+					<%end%>
+					<h6>联系:</h6>
+					<%=product.creater.email%>
+					<p><%="QQ: "+product.creater.qqnumber if product.creater.qqnumber!=""%></p>
+					<%="TEL: "+product.creater.telnumber if product.creater.telnumber!=""%>
+					<%=link_to "delete", product_path(product.id), :method=>"delete", :class=>"btn btn-danger pull-right" if current_user==product.creater%>
+				</div>
+			</div>
+		</div>
+	<%end%>
+</div>
